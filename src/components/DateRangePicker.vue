@@ -1,79 +1,80 @@
 <template lang="pug">
   .mj-daterange-picker(:style="cssProps")
-    .panels-choices(v-if="availablePanels.length > 1")
-      .panel-button(
-        v-for="panel in availablePanels"
-        :class="{'is-current': panel === currentPanel}"
-        @click="currentPanel = panel"
-        ) {{ $legends[locale].panels[panel] }}
+    .mj-daterange-section-panels
+      .panels-choices(v-if="availablePanels.length > 1")
+        .panel-button(
+          v-for="panel in availablePanels"
+          :class="{'is-current': panel === currentPanel}"
+          @click="currentPanel = panel"
+          ) {{ $legends[locale].panels[panel] }}
 
-    .preset-ranges(v-if="isPresetPicker")
-      .preset(v-for="entry in availablePresets")
-        input(type="radio" v-model="preset" :id="entry" :value="entry")
-        label(:for="entry")
-          span.check
-          span {{ $legends[locale].presets[entry] }}
+      .preset-ranges(v-if="isPresetPicker")
+        .preset(v-for="entry in availablePresets")
+          input(type="radio" v-model="preset" :id="entry" :value="entry")
+          label(:for="entry")
+            span.check
+            span {{ $legends[locale].presets[entry] }}
 
-    .mj-calendar(:class="weekSelector ? 'mj-calendar-week' : 'mj-calendar-days'" v-if="isDaysPicker")
-      .calendar-header
-        .calendar-previous-month.calendar-arrow.calendar-arrow-previous(
-          :aria-label="$legends[locale].previousMonth"
-          @click="changeMonth(1)"
-        )
-          svgicon(icon="arrow-left" width="7.4" height="12")
-        .calendar-month-name {{ currentMonthName }}
-        .calendar-previous-month.calendar-arrow.calendar-arrow-next(
-          :aria-label="$legends[locale].nextMonth"
-          @click="changeMonth(-1)")
-          svgicon(icon="arrow-right" width="7.4" height="12")
-      .calendar-days-name
-        .day(v-for="day in firstWeek")
-          span {{ day.name }}
-      .calendar-days
-        .day(
-          v-for="day in monthDays"
-          :key="day.date | date('DDMMYYYY')"
-          :class="dayClasses(day)"
-          @click="selectDay(day.date)"
-          @mouseover="hoverizeDay(day.date)"
-          @mouseleave="hoverRange = []"
-        )
-          span {{ day.date | date('D') }}
-
-    .mj-calendar(v-if="isMonthsPicker")
-      .calendar-header
-        .calendar-previous-month.calendar-arrow.calendar-arrow-previous(
-          :aria-label="$legends[locale].previousYear"
-          @click="changeYear(1)"
-        )
-          svgicon(icon="arrow-left" width="7.4" height="12")
-        .calendar-month-name {{ currentYearName }}
-        .calendar-previous-month.calendar-arrow.calendar-arrow-next(
-          :aria-label="$legends[locale].nextYear"
-          @click="changeYear(-1)")
-          svgicon(icon="arrow-right" width="7.4" height="12")
-
-      .calendar-months(v-if="isMonthsPanel")
-        .month(
-          v-for="month in yearMonths"
-          :key="month.date | date('DDMMYYYY')"
-          @click="selectMonth(month)"
-          :class="monthClasses(month)"
-        )
-          span {{ month.displayDate }}
-
-      .calendar-quarters(v-if="isQuartersPanel")
-        .quarter(
-          v-for="(quarter, index) in yearQuarters"
-          @click="selectQuarter(quarter)"
-          :class="quarterClasses(quarter)"
+      .mj-calendar(:class="weekSelector ? 'mj-calendar-week' : 'mj-calendar-days'" v-if="isDaysPicker")
+        .calendar-header
+          .calendar-previous-month.calendar-arrow.calendar-arrow-previous(
+            :aria-label="$legends[locale].previousMonth"
+            @click="changeMonth(1)"
           )
-          .legend {{ $legends[locale].quarter }} {{ ++index }}
-          .months
-            .month(v-for="month in quarter.months")
-              span {{ month.displayDate }}
+            svgicon(icon="arrow-left" width="7.4" height="12")
+          .calendar-month-name {{ currentMonthName }}
+          .calendar-previous-month.calendar-arrow.calendar-arrow-next(
+            :aria-label="$legends[locale].nextMonth"
+            @click="changeMonth(-1)")
+            svgicon(icon="arrow-right" width="7.4" height="12")
+        .calendar-days-name
+          .day(v-for="day in firstWeek")
+            span {{ day.name }}
+        .calendar-days
+          .day(
+            v-for="day in monthDays"
+            :key="day.date | date('DDMMYYYY')"
+            :class="dayClasses(day)"
+            @click="selectDay(day.date)"
+            @mouseover="hoverizeDay(day.date)"
+            @mouseleave="hoverRange = []"
+          )
+            span {{ day.date | date('D') }}
 
-    .mj-calendar(v-if="isYearPicker")
+      .mj-calendar(v-if="isMonthsPicker")
+        .calendar-header
+          .calendar-previous-month.calendar-arrow.calendar-arrow-previous(
+            :aria-label="$legends[locale].previousYear"
+            @click="changeYear(1)"
+          )
+            svgicon(icon="arrow-left" width="7.4" height="12")
+          .calendar-month-name {{ currentYearName }}
+          .calendar-previous-month.calendar-arrow.calendar-arrow-next(
+            :aria-label="$legends[locale].nextYear"
+            @click="changeYear(-1)")
+            svgicon(icon="arrow-right" width="7.4" height="12")
+
+        .calendar-months(v-if="isMonthsPanel")
+          .month(
+            v-for="month in yearMonths"
+            :key="month.date | date('DDMMYYYY')"
+            @click="selectMonth(month)"
+            :class="monthClasses(month)"
+          )
+            span {{ month.displayDate }}
+
+        .calendar-quarters(v-if="isQuartersPanel")
+          .quarter(
+            v-for="(quarter, index) in yearQuarters"
+            @click="selectQuarter(quarter)"
+            :class="quarterClasses(quarter)"
+            )
+            .legend {{ $legends[locale].quarter }} {{ ++index }}
+            .months
+              .month(v-for="month in quarter.months")
+                span {{ month.displayDate }}
+
+      .mj-calendar(v-if="isYearPicker")
       .calendar-years
         .year(
           v-for="year in years"
@@ -81,17 +82,17 @@
           :class="yearClasses(year)"
         )
           span {{ year.displayDate }}
-
-    .mj-daterange-picker-controls
-      .mj-daterange-picker-button.mj-daterange-picker-reset(
-        @click="reset"
-      )
-        | {{ resetLegend }}
-      .mj-daterange-picker-button.mj-daterange-picker-submit(
-        @click="update"
-        :class="{'is-disabled': !(values.from && values.to) }"
-      )
-        | {{ submitLegend }}
+    .mj-sections-controls
+      .mj-daterange-picker-controls
+        .mj-daterange-picker-button.mj-daterange-picker-reset(
+          @click="reset"
+        )
+          | {{ resetLegend }}
+        .mj-daterange-picker-button.mj-daterange-picker-submit(
+          @click="update"
+          :class="{'is-disabled': !(values.from && values.to) }"
+        )
+          | {{ submitLegend }}
 </template>
 
 <script lang="ts">
@@ -167,6 +168,10 @@
       type: String,
       default: 'en'
     }) locale
+    @Prop({
+      type: String,
+      default: 'vertical'
+    }) orientation
 
     @Prop({
       type: String,
