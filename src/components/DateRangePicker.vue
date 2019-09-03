@@ -75,13 +75,13 @@
                 span {{ month.displayDate }}
 
       .mj-calendar(v-if="isYearPicker")
-      .calendar-years
-        .year(
-          v-for="year in years"
-          @click="selectYear(year)"
-          :class="yearClasses(year)"
-        )
-          span {{ year.displayDate }}
+        .calendar-years
+          .year(
+            v-for="year in years"
+            @click="selectYear(year)"
+            :class="yearClasses(year)"
+          )
+            span {{ year.displayDate }}
     .mj-sections-controls
       .mj-daterange-picker-controls
         .mj-daterange-picker-button.mj-daterange-picker-reset(
@@ -302,6 +302,18 @@
         case 'forever':
           this.values = { from: this.begin, to: this.now }
           break
+        case 'pastWeek':
+          this.values = { from: startOfWeek(subWeeks(this.now, 1)), to: endOfWeek(subWeeks(this.now, 1)) }
+          break
+        case 'pastMonth':
+          this.values = { from: startOfMonth(subMonths(this.now, 1)), to: endOfMonth(subMonths(this.now, 1)) }
+          break
+        case 'nextWeek':
+          this.values = { to: startOfWeek(addWeeks(this.now, 1)), from: endOfWeek(addWeeks(this.now, 1)) }
+          break
+        case 'nextMonth':
+          this.values = { to: startOfMonth(addMonths(this.now, 1)), from: endOfMonth(addMonths(this.now, 1)) }
+          break
       }
     }
 
@@ -440,6 +452,9 @@
 
       // Set current panel
       this.currentPanel = this.panel || this.availablePanels[0]
+      console.log(this.panel)
+      console.log(this.currentPanel)
+      console.log(this.availablePanels)
     }
 
     reset() {

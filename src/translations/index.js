@@ -118,6 +118,10 @@ const dictonnaries = {
       "next90days": "Próximos 90 días",
       "next30days": "Próximos 30 días",
       "next7days": "Próximos 7 días",
+      "pastWeek": "Semana pasada",
+      "pastMonth": "Mes pasada",
+      "nextWeek": "Semana siguiente",
+      "nextMonth": "Mes siguiente",
       "today": "Hoy",
       "tomorrow": "Mañana",
       "yesterday": "Ayer"
