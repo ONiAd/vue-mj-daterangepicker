@@ -602,6 +602,8 @@
 
       if (day.currentMonth) {
         classes.push('is-current-month')
+      } else {
+          classes.push('is-not-current-month')
       }
       if (this.values.from && this.values.to && isWithinRange(day.date, this.values.from, this.values.to) ) {
         classes.push('is-selected')
