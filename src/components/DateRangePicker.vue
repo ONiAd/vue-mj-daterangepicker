@@ -457,6 +457,7 @@
 
 
     created() {
+
       // Parse Inputs
       Object.keys(this.values).forEach((value) => {
         this.values[value] = isValid(parse(this[value])) ? this[value] : null
@@ -468,6 +469,12 @@
       // Display current month or "to" month
       this.current = this.values.to ? this.values.to : this.now
 
+      if (this.from) {
+        this.values.from = this.from
+      }
+      if (this.to) {
+        this.values.to = this.to
+      }
       // Update Calendar
       this.updateCalendar()
 
