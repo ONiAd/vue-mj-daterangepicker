@@ -174,7 +174,7 @@
     }) orientation
     @Prop({
       type: Number,
-      default: 1
+      default: 2
     }) amountCalendars
     @Prop({
       type: String,
@@ -462,6 +462,7 @@
         this.values[value] = isValid(parse(this[value])) ? this[value] : null
       })
 
+
       // Todo ? If from or to is null, or from is after to, both are null
 
       // Display current month or "to" month
@@ -472,6 +473,7 @@
 
       // Set current panel
       this.currentPanel = this.panel || this.availablePanels[0]
+
     }
 
     reset() {
@@ -492,6 +494,7 @@
         from: format(startOfDay(this.values.from), 'YYYY-MM-DDTHH:mm:ss.SSSZ'),
         panel: this.currentPanel
       })
+
     }
 
     changeMonth(diff: number) {
@@ -521,7 +524,7 @@
           this.hoverRange = []
         }
       }
-      this.preset = 'custom'
+
     }
 
     selectQuarter(quarter) {
@@ -579,6 +582,9 @@
         this.monthDays[i] = days
       }
       this.monthDays = this.monthDays.reverse()
+      this.update()
+
+
     }
 
     dayClasses(day) {
