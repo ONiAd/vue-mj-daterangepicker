@@ -466,15 +466,17 @@
 
       // Todo ? If from or to is null, or from is after to, both are null
 
+      if (this.from) {
+        this.values.from = format(startOfDay(this.from), 'YYYY-MM-DDTHH:mm:ss.SSSZ')
+      }
+      if (this.to) {
+        this.values.to = format(endOfDay(this.to), 'YYYY-MM-DDTHH:mm:ss.SSSZ')
+      }
+
       // Display current month or "to" month
       this.current = this.values.to ? this.values.to : this.now
 
-      if (this.from) {
-        this.values.from = this.from
-      }
-      if (this.to) {
-        this.values.to = this.to
-      }
+      this.update()
       // Update Calendar
       this.updateCalendar()
 
@@ -515,6 +517,7 @@
     }
 
     selectDay(date) {
+      console.log(date)
       if (this.weekSelector) {
         this.values.from = startOfWeek(date, { weekStartsOn: 1 })
         this.values.to = endOfWeek(date, { weekStartsOn: 1 })
@@ -589,9 +592,6 @@
         this.monthDays[i] = days
       }
       this.monthDays = this.monthDays.reverse()
-      this.update()
-
-
     }
 
     dayClasses(day) {
