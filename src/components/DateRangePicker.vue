@@ -467,10 +467,13 @@
       // Todo ? If from or to is null, or from is after to, both are null
 
       if (this.from) {
-        this.values.from = format(startOfDay(this.from), 'YYYY-MM-DDTHH:mm:ss.SSSZ')
+        console.log(this.from)
+        this.values.from = startOfDay(this.from)
+        console.log(this.values.from)
+
       }
       if (this.to) {
-        this.values.to = format(endOfDay(this.to), 'YYYY-MM-DDTHH:mm:ss.SSSZ')
+        this.values.to = endOfDay(this.to)
       }
 
       // Display current month or "to" month
@@ -517,7 +520,6 @@
     }
 
     selectDay(date) {
-      console.log(date)
       if (this.weekSelector) {
         this.values.from = startOfWeek(date, { weekStartsOn: 1 })
         this.values.to = endOfWeek(date, { weekStartsOn: 1 })
