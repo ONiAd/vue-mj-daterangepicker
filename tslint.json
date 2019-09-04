@@ -13,6 +13,12 @@
       true,
       "never"
     ],
+    "max-line-length": [
+      true,
+      {
+        "limit": 150
+      }
+    ],
     "quotemark": [true, "single"],
     "indent": [true, "spaces", 2],
     "interface-name": false,

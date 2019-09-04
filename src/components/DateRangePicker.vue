@@ -13,7 +13,7 @@
           input(type="radio" v-model="preset" :id="entry" :value="entry")
           label(:for="entry")
             span.check
-            span {{ $legends[locale].presets[entry] }}
+            span {{ $legends[locale].presets[entry]  }}
 
       .mj-calendar(:class="weekSelector ? 'mj-calendar-week' : 'mj-calendar-days'" v-if="isDaysPicker")
         .calendar-header
@@ -22,25 +22,26 @@
             @click="changeMonth(1)"
           )
             svgicon(icon="arrow-left" width="7.4" height="12")
-          .calendar-month-name {{ currentMonthName }}
+          .calendar-month-name {{ lastMonthName }} - {{ currentMonthName }}
           .calendar-previous-month.calendar-arrow.calendar-arrow-next(
             :aria-label="$legends[locale].nextMonth"
             @click="changeMonth(-1)")
             svgicon(icon="arrow-right" width="7.4" height="12")
-        .calendar-days-name
-          .day(v-for="day in firstWeek")
-            span {{ day.name }}
-        .calendar-days
-          .day(
-            v-for="day in monthDays"
-            :key="day.date | date('DDMMYYYY')"
-            :class="dayClasses(day)"
-            @click="selectDay(day.date)"
-            @mouseover="hoverizeDay(day.date)"
-            @mouseleave="hoverRange = []"
-          )
-            span {{ day.date | date('D') }}
-
+        .calendars
+          .calendar(v-for="(calendar,key) in monthDays")
+            .calendar-days-name
+              .day(v-for="day in firstWeek")
+                span {{ day.name }}
+            .calendar-days
+              .day(
+                v-for="day in monthDays[key]"
+                :key="day.date | date('DDMMYYYY')"
+                :class="dayClasses(day)"
+                @click="selectDay(day.date)"
+                @mouseover="hoverizeDay(day.date)"
+                @mouseleave="hoverRange = []"
+              )
+                span {{ day.date | date('D') }}
       .mj-calendar(v-if="isMonthsPicker")
         .calendar-header
           .calendar-previous-month.calendar-arrow.calendar-arrow-previous(
@@ -131,7 +132,6 @@
 
   Vue.prototype.$legends = dictionnaries
 
-  console.log(dictionnaries)
 
   const locales = {
     en: require('date-fns/locale/en'),
@@ -172,7 +172,10 @@
       type: String,
       default: 'vertical'
     }) orientation
-
+    @Prop({
+      type: Number,
+      default: 1
+    }) amountCalendars
     @Prop({
       type: String,
       default: null
@@ -248,7 +251,16 @@
 
     @Prop({
       type: Array,
-      default: () => ['today', 'yesterday', 'last7days', 'last30days', 'last90days', 'last365days', 'forever', 'custom']
+      default: () => [
+        'today',
+        'yesterday',
+        'last7days',
+        'last30days',
+        'last90days',
+        'last365days',
+        'forever',
+        'custom'
+      ]
     }) presets
 
     @Watch('currentPanel', { immediate: true })
@@ -338,13 +350,16 @@
     }
 
     get firstWeek() {
-      const days = this.monthDays.slice(0, 7)
       const week = []
+      // for (let i = 0; i < this.monthDays.length; i++) {
+        // console.log(i)
+      const days = this.monthDays[0].slice(0, 7)
       for (const day of days) {
         week.push({
           name: format(day.date, 'dd', { locale: locales[this.locale] })
         })
       }
+      // }
       return week
     }
 
@@ -408,6 +423,10 @@
       return format(this.current, 'MMMM YYYY', { locale: locales[this.locale] })
     }
 
+    get lastMonthName() {
+      return format(subMonths(this.current, 1), 'MMMM YYYY', { locale: locales[this.locale] })
+    }
+
     get currentYearName() {
       return format(this.current, 'YYYY', { locale: locales[this.locale] })
     }
@@ -436,6 +455,7 @@
       return this.currentPanel === 'quarter'
     }
 
+
     created() {
       // Parse Inputs
       Object.keys(this.values).forEach((value) => {
@@ -452,9 +472,6 @@
 
       // Set current panel
       this.currentPanel = this.panel || this.availablePanels[0]
-      console.log(this.panel)
-      console.log(this.currentPanel)
-      console.log(this.availablePanels)
     }
 
     reset() {
@@ -538,26 +555,30 @@
     }
 
     updateCalendar() {
-      const days = []
 
-      const lastDayOfMonth = endOfMonth(this.current)
-      const firstDayOfMonth = startOfMonth(this.current)
-      const nbDaysLastMonth = (+format(firstDayOfMonth, 'd') - 1) % 7
+      for (let i = 0; i < this.amountCalendars; i++) {
+        const days = []
 
-      let day = subDays(firstDayOfMonth, nbDaysLastMonth)
+        const lastDayOfMonth = endOfMonth(subMonths(this.current, i))
+        const firstDayOfMonth = startOfMonth(subMonths(this.current, i))
+        const nbDaysLastMonth = (+format(firstDayOfMonth, 'd') - 1) % 7
 
-      while (isBefore(day, lastDayOfMonth) || days.length % 7 > 0) {
-        days.push({
-          date: day,
-          selectable:
-            this.future && isAfter(day, this.now) ? true : false ||
-            this.past && isBefore(day, this.now) ? true : false ||
-            isSameDay(day, this.now),
-          currentMonth: isSameMonth(this.current, day)
-        })
-        day = addDays(day, 1)
+        let day = subDays(firstDayOfMonth, nbDaysLastMonth)
+
+        while (isBefore(day, lastDayOfMonth) || days.length % 7 > 0) {
+          days.push({
+            date: day,
+            selectable:
+              this.future && isAfter(day, this.now) ? true : false ||
+              this.past && isBefore(day, this.now) ? true : false ||
+              isSameDay(day, this.now),
+            currentMonth: isSameMonth(this.current - i, day)
+          })
+          day = addDays(day, 1)
+        }
+        this.monthDays[i] = days
       }
-      this.monthDays = days
+      this.monthDays = this.monthDays.reverse()
     }
 
     dayClasses(day) {
@@ -737,7 +758,14 @@
   color: var(--contrast-color);
   background-color: var(--normal-color);
   padding: 20px;
+  .calendars{
+    display: flex;
+    justify-content: flex-wrap;
 
+    .calendar{
+      flex:1 1 auto;
+    }
+  }
   .calendar-header {
     display: flex;
     justify-content: space-between;

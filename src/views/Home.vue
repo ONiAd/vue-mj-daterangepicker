@@ -4,11 +4,6 @@
       date-range-picker(:to="$route.query.to" :from="$route.query.from" @update="checkUpdate" locale="de" submit-title="Actualiser" :panel="$route.query.panel" begin="2016-02-19T00:00:00.000+01:00")
       //- pre Date Picker 1
       //- date-range-picker(:to="$route.query.to" :from="$route.query.from" @update="checkUpdate" :past="false" :dark="false")
-    div(style="margin: 20px 0;")
-      date-range-picker(:to="$route.query.to" :from="$route.query.from" @update="checkUpdate" :theme="theme")
-    //- div
-      pre Date Picker 2
-      date-range-picker(to="2019-02-19T23:00:00.000Z" from="2019-02-15T23:00:00.000Z" @update="checkUpdate" locale="fr")
 </template>
 
 <script lang="ts">
