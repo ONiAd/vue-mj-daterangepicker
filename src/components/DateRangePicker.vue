@@ -315,13 +315,13 @@
           this.values = { from: this.begin, to: this.now }
           break
         case 'pastWeek':
-          this.values = { from: startOfWeek(subWeeks(this.now, 1)), to: endOfWeek(subWeeks(this.now, 1)) }
+          this.values = { from: startOfWeek(subWeeks(this.now, 1), { weekStartsOn: 1 }), to: endOfWeek(subWeeks(this.now, 1), { weekStartsOn: 1 }) }
           break
         case 'pastMonth':
           this.values = { from: startOfMonth(subMonths(this.now, 1)), to: endOfMonth(subMonths(this.now, 1)) }
           break
         case 'nextWeek':
-          this.values = { to: startOfWeek(addWeeks(this.now, 1)), from: endOfWeek(addWeeks(this.now, 1)) }
+          this.values = { to: startOfWeek(addWeeks(this.now, 1), { weekStartsOn: 1 }), from: endOfWeek(addWeeks(this.now, 1), { weekStartsOn: 1 }) }
           break
         case 'nextMonth':
           this.values = { to: startOfMonth(addMonths(this.now, 1)), from: endOfMonth(addMonths(this.now, 1)) }
