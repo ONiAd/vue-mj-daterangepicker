@@ -1,6 +1,6 @@
 <template lang="pug">
   .mj-daterange-picker(:style="cssProps")
-    .mj-daterange-section-panels
+    .mj-daterange-section-panels(:class="orientation === 'horizontal'?'horizontal':'vertical'")
       .panels-choices(v-if="availablePanels.length > 1")
         .panel-button(
           v-for="panel in availablePanels"
@@ -83,7 +83,7 @@
             :class="yearClasses(year)"
           )
             span {{ year.displayDate }}
-    .mj-sections-controls
+    .mj-sections-controls(:class="orientation === 'horizontal'?'horizontal':'vertical'")
       .mj-daterange-picker-controls
         .mj-daterange-picker-button.mj-daterange-picker-reset(
           @click="reset"
