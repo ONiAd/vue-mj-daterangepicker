@@ -268,6 +268,24 @@
       this.weekSelector = panel === 'range' ? false : true
       this.updateCalendar()
     }
+    @Watch('from')
+    changeFrom(from) {
+      if (this.from) {
+        console.log(this.from)
+        this.values.from = startOfDay(this.from)
+        console.log(this.values.from)
+      }
+      this.updateCalendar()
+    }
+    @Watch('to')
+    changeTo(to) {
+      if (this.to) {
+        console.log(this.to)
+        this.values.to = endOfDay(this.to)
+        console.log(this.values.to)
+      }
+      this.updateCalendar()
+    }
 
     @Watch('preset')
     affectPreset(preset) {
