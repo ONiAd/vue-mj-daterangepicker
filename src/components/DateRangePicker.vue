@@ -280,9 +280,7 @@
     @Watch('to')
     changeTo(to) {
       if (this.to) {
-        console.log(this.to)
         this.values.to = endOfDay(this.to)
-        console.log(this.values.to)
       }
       this.updateCalendar()
     }
@@ -481,29 +479,14 @@
         this.values[value] = isValid(parse(this[value])) ? this[value] : null
       })
 
-
-      // Todo ? If from or to is null, or from is after to, both are null
-
-      if (this.from) {
-        console.log(this.from)
-        this.values.from = startOfDay(this.from)
-        console.log(this.values.from)
-
-      }
-      if (this.to) {
-        this.values.to = endOfDay(this.to)
-      }
-
       // Display current month or "to" month
       this.current = this.values.to ? this.values.to : this.now
 
-      this.update()
       // Update Calendar
       this.updateCalendar()
 
       // Set current panel
       this.currentPanel = this.panel || this.availablePanels[0]
-
     }
 
     reset() {
