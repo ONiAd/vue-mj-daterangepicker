@@ -20,7 +20,7 @@
           .calendar-previous-month.calendar-arrow.calendar-arrow-previous(
             :aria-label="$legends[locale].previousMonth"
             @click="changeMonth(1)"
-            :class="(past || (!future && currentMonth > nowMonth )) ? 'show' : 'hide'"
+            :class="(past || (!future && currentMonth > nowMonth )) ? 'click-allowed' : 'click-not-allowed'"
           )
             svgicon(icon="arrow-left" width="7.4" height="12")
           .calendar-month-name {{ lastMonthName }} - {{ currentMonthName }}
