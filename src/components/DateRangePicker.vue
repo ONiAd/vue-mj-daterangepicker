@@ -20,16 +20,19 @@
           .calendar-previous-month.calendar-arrow.calendar-arrow-previous(
             :aria-label="$legends[locale].previousMonth"
             @click="changeMonth(1)"
-            :class="(past || (!future && currentMonth > nowMonth )) ? 'click-allowed' : 'click-not-allowed'"
+            :class="(past || (!future && currentMonth > nowMonth && currentYear > nowYear )) ? 'click-allowed' : 'click-not-allowed'"
           )
-            svgicon(icon="arrow-left" width="7.4" height="12")
-          .calendar-month-name {{ lastMonthName }} - {{ currentMonthName }}
+            svgicon(icon="arrow-left" width="8" height="16")
+          .calendar-month-name
+            span(v-if="amountCalendars > 1") {{ lastMonthName }}
+            span(v-if="amountCalendars > 1")  -
+            span {{ currentMonthName }}
           .calendar-previous-month.calendar-arrow.calendar-arrow-next(
             :aria-label="$legends[locale].nextMonth"
             @click="changeMonth(-1)"
-            :class="(future || (!future && currentMonth < nowMonth )) ? 'click-allowed' : 'click-not-allowed'"
+            :class="(future || (!future && currentMonth < nowMonth && currentYear < nowYear )) ? 'click-allowed' : 'click-not-allowed'"
           )
-            svgicon(icon="arrow-right" width="7.4" height="12")
+            svgicon(icon="arrow-right" width="8" height="16")
         .calendars
           .calendar(v-for="(calendar,key) in monthDays")
             .calendar-days-name
@@ -276,14 +279,14 @@
       if (this.from) {
         this.values.from = startOfDay(this.from)
       }
-      this.updateCalendar()
+      // this.updateCalendar()
     }
     @Watch('to')
     changeTo(to) {
       if (this.to) {
         this.values.to = endOfDay(this.to)
       }
-      this.updateCalendar()
+      // this.updateCalendar()
     }
 
     @Watch('preset')
@@ -436,14 +439,24 @@
     get currentMonthName() {
       return format(this.current, 'MMMM YYYY', { locale: locales[this.locale] })
     }
+
     get currentMonth() {
-        let date = new Date(this.current)
+        const date = new Date(this.current)
         return date.getMonth() + 1
     }
     get nowMonth() {
-        let date = new Date(this.now)
+        const date = new Date(this.now)
         return date.getMonth() + 1
     }
+
+    get currentYear() {
+          const date = new Date(this.current)
+          return date.getFullYear()
+      }
+    get nowYear() {
+          const date = new Date(this.now)
+          return date.getFullYear()
+  }
 
     get lastMonthName() {
       return format(subMonths(this.current, 1), 'MMMM YYYY', { locale: locales[this.locale] })
@@ -484,9 +497,8 @@
       Object.keys(this.values).forEach((value) => {
         this.values[value] = isValid(parse(this[value])) ? this[value] : null
       })
-
       // Display current month or "to" month
-      this.current = this.values.to ? this.values.to : this.now
+      this.current = this.values.to !== null ? this.values.to : this.now
 
       // Update Calendar
       this.updateCalendar()
@@ -601,6 +613,7 @@
         this.monthDays[i] = days
       }
       this.monthDays = this.monthDays.reverse()
+        // console.log(this.current)
     }
 
     dayClasses(day) {
@@ -783,7 +796,7 @@
   padding: 20px;
   .calendars{
     display: flex;
-    justify-content: flex-wrap;
+    justify-content: space-between;
 
     .calendar{
       flex:1 1 auto;
