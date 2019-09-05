@@ -271,9 +271,7 @@
     @Watch('from')
     changeFrom(from) {
       if (this.from) {
-        console.log(this.from)
         this.values.from = startOfDay(this.from)
-        console.log(this.values.from)
       }
       this.updateCalendar()
     }
@@ -367,15 +365,12 @@
 
     get firstWeek() {
       const week = []
-      // for (let i = 0; i < this.monthDays.length; i++) {
-        // console.log(i)
       const days = this.monthDays[0].slice(0, 7)
       for (const day of days) {
         week.push({
           name: format(day.date, 'dd', { locale: locales[this.locale] })
         })
       }
-      // }
       return week
     }
 
@@ -588,7 +583,7 @@
               this.future && isAfter(day, this.now) ? true : false ||
               this.past && isBefore(day, this.now) ? true : false ||
               isSameDay(day, this.now),
-            currentMonth: isSameMonth(this.current - i, day)
+            currentMonth: isSameMonth(subMonths(this.current, i), day)
           })
           day = addDays(day, 1)
         }
@@ -597,9 +592,8 @@
       this.monthDays = this.monthDays.reverse()
     }
 
-    dayClasses(day) {
+    dayClasses(day,month = 0) {
       const classes = []
-
       if (day.currentMonth) {
         classes.push('is-current-month')
       } else {
