@@ -27,7 +27,7 @@
           .calendar-previous-month.calendar-arrow.calendar-arrow-next(
             :aria-label="$legends[locale].nextMonth"
             @click="changeMonth(-1)"
-            :class="(future || (!future && currentMonth < nowMonth )) ? 'show' : 'hide'"
+            :class="(future || (!future && currentMonth < nowMonth )) ? 'click-allowed' : 'click-not-allowed'"
           )
             svgicon(icon="arrow-right" width="7.4" height="12")
         .calendars
