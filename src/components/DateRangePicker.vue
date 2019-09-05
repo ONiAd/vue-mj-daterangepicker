@@ -20,14 +20,14 @@
           .calendar-previous-month.calendar-arrow.calendar-arrow-previous(
             :aria-label="$legends[locale].previousMonth"
             @click="changeMonth(1)"
-            v-show="past || (!past && currentMonth > nowMonth)"
+            :class="(past || (!future && currentMonth > nowMonth )) ? 'show' : 'hide'"
           )
             svgicon(icon="arrow-left" width="7.4" height="12")
           .calendar-month-name {{ lastMonthName }} - {{ currentMonthName }}
           .calendar-previous-month.calendar-arrow.calendar-arrow-next(
             :aria-label="$legends[locale].nextMonth"
             @click="changeMonth(-1)"
-            v-show="future ||(!future && currentMonth < nowMonth )"
+            :class="(future || (!future && currentMonth < nowMonth )) ? 'show' : 'hide'"
           )
             svgicon(icon="arrow-right" width="7.4" height="12")
         .calendars
