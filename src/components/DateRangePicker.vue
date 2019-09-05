@@ -20,12 +20,15 @@
           .calendar-previous-month.calendar-arrow.calendar-arrow-previous(
             :aria-label="$legends[locale].previousMonth"
             @click="changeMonth(1)"
+            v-show="past || (!past && currentMonth > nowMonth)"
           )
             svgicon(icon="arrow-left" width="7.4" height="12")
           .calendar-month-name {{ lastMonthName }} - {{ currentMonthName }}
           .calendar-previous-month.calendar-arrow.calendar-arrow-next(
             :aria-label="$legends[locale].nextMonth"
-            @click="changeMonth(-1)")
+            @click="changeMonth(-1)"
+            v-show="future ||(!future && currentMonth < nowMonth )"
+          )
             svgicon(icon="arrow-right" width="7.4" height="12")
         .calendars
           .calendar(v-for="(calendar,key) in monthDays")
@@ -174,7 +177,7 @@
     }) orientation
     @Prop({
       type: Number,
-      default: 2
+      default: 1
     }) amountCalendars
     @Prop({
       type: String,
@@ -433,6 +436,14 @@
     get currentMonthName() {
       return format(this.current, 'MMMM YYYY', { locale: locales[this.locale] })
     }
+    get currentMonth() {
+        let date = new Date(this.current)
+        return date.getMonth() + 1
+    }
+    get nowMonth() {
+        let date = new Date(this.now)
+        return date.getMonth() + 1
+    }
 
     get lastMonthName() {
       return format(subMonths(this.current, 1), 'MMMM YYYY', { locale: locales[this.locale] })
@@ -592,7 +603,7 @@
       this.monthDays = this.monthDays.reverse()
     }
 
-    dayClasses(day,month = 0) {
+    dayClasses(day) {
       const classes = []
       if (day.currentMonth) {
         classes.push('is-current-month')
