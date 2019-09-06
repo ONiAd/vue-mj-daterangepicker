@@ -26,7 +26,7 @@
           .calendar-month-name
             span(v-if="amountCalendars > 1") {{ lastMonthName }}
             span(v-if="amountCalendars > 1")  -
-            span {{ currentMonthName }}
+            span  {{ currentMonthName }}
           .calendar-previous-month.calendar-arrow.calendar-arrow-next(
             :aria-label="$legends[locale].nextMonth"
             @click="changeMonth(-1)"
@@ -279,14 +279,12 @@
       if (this.from) {
         this.values.from = startOfDay(this.from)
       }
-      // this.updateCalendar()
     }
     @Watch('to')
     changeTo(to) {
       if (this.to) {
         this.values.to = endOfDay(this.to)
       }
-      // this.updateCalendar()
     }
 
     @Watch('preset')
@@ -308,28 +306,28 @@
           this.values = { from: startOfDay(addDays(this.now, 1)), to: endOfDay(addDays(this.now, 1)) }
           break
         case 'last7days':
-          this.values = { from: startOfDay(subWeeks(this.now, 1)), to: this.now }
+          this.values = { from: startOfDay(subDays(this.now, 7)), to: subDays(this.now , 1) }
           break
         case 'next7days':
-          this.values = { to: startOfDay(addWeeks(this.now, 1)), from: this.now }
+          this.values = { to: startOfDay(addDays(this.now, 7)), from: this.now }
           break
         case 'last30days':
-          this.values = { from: startOfDay(subMonths(this.now, 1)), to: this.now }
+          this.values = { from: startOfDay(subDays(this.now, 30)), to: subDays(this.now , 1) }
           break
         case 'next30days':
-          this.values = { to: startOfDay(addMonths(this.now, 1)), from: this.now }
+          this.values = { to: startOfDay(addDays(this.now, 30)), from: this.now }
           break
         case 'last90days':
-          this.values = { from: startOfDay(subMonths(this.now, 3)), to: this.now }
+          this.values = { from: startOfDay(subDays(this.now, 90)), to: subDays(this.now , 1) }
           break
         case 'next90days':
-          this.values = { to: startOfDay(addMonths(this.now, 3)), from: this.now }
+          this.values = { to: startOfDay(addDays(this.now, 90)), from: this.now }
           break
         case 'last365days':
-          this.values = { from: startOfDay(subYears(this.now, 1)), to: this.now }
+          this.values = { from: startOfDay(subDays(this.now, 365)), to: subDays(this.now , 1) }
           break
         case 'next365days':
-          this.values = { to: startOfDay(addYears(this.now, 1)), from: this.now }
+          this.values = { to: startOfDay(addDays(this.now, 365)), from: this.now }
           break
         case 'forever':
           this.values = { from: this.begin, to: this.now }
@@ -502,9 +500,9 @@
 
       // Update Calendar
       this.updateCalendar()
-
       // Set current panel
       this.currentPanel = this.panel || this.availablePanels[0]
+
     }
 
     reset() {
@@ -592,13 +590,11 @@
 
       for (let i = 0; i < this.amountCalendars; i++) {
         const days = []
-
         const lastDayOfMonth = endOfMonth(subMonths(this.current, i))
         const firstDayOfMonth = startOfMonth(subMonths(this.current, i))
         const nbDaysLastMonth = (+format(firstDayOfMonth, 'd') - 1) % 7
 
         let day = subDays(firstDayOfMonth, nbDaysLastMonth)
-
         while (isBefore(day, lastDayOfMonth) || days.length % 7 > 0) {
           days.push({
             date: day,
