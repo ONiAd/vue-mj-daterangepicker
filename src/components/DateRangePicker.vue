@@ -20,7 +20,7 @@
           .calendar-previous-month.calendar-arrow.calendar-arrow-previous(
             :aria-label="$legends[locale].previousMonth"
             @click="changeMonth(1)"
-            :class="(past || (!future && currentMonth > nowMonth && currentYear > nowYear )) ? 'click-allowed' : 'click-not-allowed'"
+            :class="(past || (!future && currentMonth > nowMonth && currentYear >= nowYear )) ? 'click-allowed' : 'click-not-allowed'"
           )
             svgicon(icon="arrow-left" width="8" height="16")
           .calendar-month-name
@@ -30,7 +30,7 @@
           .calendar-previous-month.calendar-arrow.calendar-arrow-next(
             :aria-label="$legends[locale].nextMonth"
             @click="changeMonth(-1)"
-            :class="(future || (!future && currentMonth < nowMonth && currentYear < nowYear )) ? 'click-allowed' : 'click-not-allowed'"
+            :class="(future || (!future && currentMonth < nowMonth && currentYear <= nowYear )) ? 'click-allowed' : 'click-not-allowed'"
           )
             svgicon(icon="arrow-right" width="8" height="16")
         .calendars
